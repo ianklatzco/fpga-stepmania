@@ -43,8 +43,9 @@ keyboard keyboard_inst(
 // display
 
 logic [9:0] DrawX, DrawY;
+// signals to tell color mapper to draw on screen
 logic ball, background, receptor_background;
-logic [3:0] receptor;
+logic [3:0] receptor, display_arrow;
 
 vga_controller vga_controller_inst(
 	.Clk        (Clk),
@@ -63,6 +64,7 @@ color_mapper color_mapper_inst(
 	.is_receptor(receptor),
 	.is_background(background),
 	.is_receptor_background(receptor_background),
+	.display_arrow(display_arrow),
 	.DrawX  (DrawX),
 	.DrawY  (DrawY),
 	.VGA_R  (VGA_R),
@@ -86,6 +88,14 @@ receptor receptor_inst(
 	.is_background      (background),
 	.keycode            (keycode[7:0]),
 	.DrawX(DrawX), .DrawY(DrawY)
+);
+
+arrow arrow_inst(
+	.Clk          (Clk),
+	.reset        (reset),
+	.frame_clk    (VGA_VS),
+	.display_arrow(display_arrow),
+	.DrawX (DrawX), .DrawY (DrawY),
 );
 
 // endisplay

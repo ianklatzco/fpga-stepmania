@@ -1,7 +1,7 @@
 // color_mapper: Decide which color to be output to VGA for each pixel.
 module  color_mapper ( 
                     input              is_ball, is_background, is_receptor_background,
-                    input        [3:0] is_receptor,
+                    input        [3:0] is_receptor, display_arrow,
                                                               //   or background (computed in ball.sv)
                     input        [9:0] DrawX, DrawY,       // Current pixel coordinates
                     output logic [7:0] VGA_R, VGA_G, VGA_B // VGA RGB output
@@ -22,6 +22,12 @@ module  color_mapper (
             Red = 8'hff;
             Green = 8'hff;
             Blue = 8'hff;
+        end
+
+        // draw arrow
+        else if ( display_arrow[0] )
+        begin
+            Red = 8'h55; Green = 8'h00; Blue = 8'h00;
         end
 
         // draw depressed receptor
