@@ -577,11 +577,6 @@ set_location_assignment PIN_E10 -to EXT_IO[5]
 set_location_assignment PIN_D9 -to EXT_IO[6]
 set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
 set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
-set_global_assignment -name SYSTEMVERILOG_FILE hex_driver.sv
-set_global_assignment -name SYSTEMVERILOG_FILE toplevel.sv
-set_global_assignment -name SYSTEMVERILOG_FILE ps2_kb/keyboard.sv
-set_global_assignment -name SYSTEMVERILOG_FILE ps2_kb/Dreg.sv
-set_global_assignment -name SYSTEMVERILOG_FILE ps2_kb/11_reg.sv
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
@@ -1122,4 +1117,12 @@ set_instance_assignment -name IO_MAXIMUM_TOGGLE_RATE "0 MHz" -to HEX3[0]
 set_instance_assignment -name FAST_INPUT_REGISTER ON -to *
 set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to *
 set_instance_assignment -name TSU_REQUIREMENT "10 ns" -from * -to *
+set_global_assignment -name SYSTEMVERILOG_FILE vga/ball.sv
+set_global_assignment -name SYSTEMVERILOG_FILE vga/vga_controller.sv
+set_global_assignment -name SYSTEMVERILOG_FILE vga/color_mapper.sv
+set_global_assignment -name SYSTEMVERILOG_FILE hex_driver.sv
+set_global_assignment -name SYSTEMVERILOG_FILE toplevel.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ps2_kb/keyboard.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ps2_kb/Dreg.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ps2_kb/11_reg.sv
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
