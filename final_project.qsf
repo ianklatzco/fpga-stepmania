@@ -1117,6 +1117,7 @@ set_instance_assignment -name IO_MAXIMUM_TOGGLE_RATE "0 MHz" -to HEX3[0]
 set_instance_assignment -name FAST_INPUT_REGISTER ON -to *
 set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to *
 set_instance_assignment -name TSU_REQUIREMENT "10 ns" -from * -to *
+set_global_assignment -name SYSTEMVERILOG_FILE vga/receptor.sv
 set_global_assignment -name SYSTEMVERILOG_FILE vga/ball.sv
 set_global_assignment -name SYSTEMVERILOG_FILE vga/vga_controller.sv
 set_global_assignment -name SYSTEMVERILOG_FILE vga/color_mapper.sv

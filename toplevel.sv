@@ -24,26 +24,27 @@ always_ff @ (posedge Clk) begin
 		VGA_CLK <= ~VGA_CLK;
 end    
 
-logic [7:0] key_code;
-logic key_press;
-assign LEDG[9] = key_press;
-assign LEDG[8:0] = key_code;
+logic [7:0] keycode;
+logic keypress;
+assign LEDG[8] = keypress;
+assign LEDG[7:0] = keycode;
 
-HexDriver hex_driver_0 ( .In0 (key_code[3:0]), .Out0(HEX0) );
-HexDriver hex_driver_1 ( .In0 (key_code[7:4]), .Out0(HEX1) );
+HexDriver hex_driver_0 ( .In0 (keycode[3:0]), .Out0(HEX0) );
+HexDriver hex_driver_1 ( .In0 (keycode[7:4]), .Out0(HEX1) );
 
 keyboard keyboard_inst(
 	.Clk    (Clk),
 	.psClk  (PS2_KBCLK), .psData(PS2_KBDAT),
 	.reset  (reset),
-	.keyCode(key_code),
-	.press  (key_press)
+	.keyCode(keycode),
+	.press  (keypress)
 );
 
 // display
 
 logic [9:0] DrawX, DrawY;
-logic ball;
+logic ball, background, receptor_background;
+logic [3:0] receptor;
 
 vga_controller vga_controller_inst(
 	.Clk        (Clk),
@@ -59,7 +60,10 @@ vga_controller vga_controller_inst(
 
 color_mapper color_mapper_inst(
 	.is_ball(ball),
-	.DrawX  (DrawX), // todo
+	.is_receptor(receptor),
+	.is_background(background),
+	.is_receptor_background(receptor_background),
+	.DrawX  (DrawX),
 	.DrawY  (DrawY),
 	.VGA_R  (VGA_R),
 	.VGA_G  (VGA_G),
@@ -72,8 +76,16 @@ ball ball_inst(
 	.frame_clk          (VGA_VS),
 	.DrawX              (DrawX),
 	.DrawY              (DrawY),
-	.keycode_lower_8bits(key_code[7:0]),
+	.keycode_lower_8bits(keycode[7:0]),
 	.is_ball            (ball)
+);
+
+receptor receptor_inst(
+	.is_receptor        (receptor),
+	.is_receptor_background(receptor_background),
+	.is_background      (background),
+	.keycode            (keycode[7:0]),
+	.DrawX(DrawX), .DrawY(DrawY)
 );
 
 // endisplay

@@ -73,7 +73,7 @@ module keyboard(
 			// A key has been released.
 			else if (Byte_1[9:2] == 8'hF0)
 			begin
-				Data = Byte_2[9:2];
+				Data = 8'b0;
 				Press = 1'b0;
 
 				if (Data == Typematic_Keycode)
@@ -81,10 +81,10 @@ module keyboard(
 			end
 
 			// This make code is a repeat.
-			else if (Byte_2[9:2] == Typematic_Keycode)
-			begin
-				// Do nothing
-			end
+			// else if (Byte_2[9:2] == Typematic_Keycode)
+			// begin
+			// 	// Do nothing
+			// end
 
 			// A key has been pressed.
 			else if (Byte_1[9:2] != 8'hF0)
