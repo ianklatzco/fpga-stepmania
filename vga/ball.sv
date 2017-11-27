@@ -121,30 +121,11 @@ module  ball ( input         Clk,                // 50 MHz clock
             Ball_Y_Motion_in = Ball_Y_Step;
         end
    
-
-        
-    /**************************************************************************************
-        ATTENTION! Please answer the following quesiton in your lab report! Points will be allocated for the answers!
-        Hidden Question #2/2:
-          Notice that Ball_Y_Pos is updated using Ball_Y_Motion. 
-          Will the new value of Ball_Y_Motion be used when Ball_Y_Pos is updated, or the old? 
-          What is the difference between writing
-            "Ball_Y_Pos_in = Ball_Y_Pos + Ball_Y_Motion;" and 
-            "Ball_Y_Pos_in = Ball_Y_Pos + Ball_Y_Motion_in;"?
-          How will this impact behavior of the ball during a bounce, and how might that interact with a response to a keypress?
-          Give an answer in your Post-Lab.
-    **************************************************************************************/
-        
         // Compute whether the pixel corresponds to ball or background
         if ( ( DistX*DistX + DistY*DistY) <= (Size * Size) ) 
             is_ball = 1'b1;
         else
             is_ball = 1'b0;
-        
-        /* The ball's (pixelated) circle is generated using the standard circle formula.  Note that while 
-           the single line is quite powerful descriptively, it causes the synthesis tool to use up three
-           of the 12 available multipliers on the chip! */
-        
     end
     
 endmodule
