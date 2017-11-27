@@ -30,11 +30,11 @@ print("Good luck and have fun with your projets!\n")
 while(1):
     mode = int(input("Which mode of PNG to Txt would you like to use? Enter number 0 or 1: "))
     if mode == 0:
-        #os.system("python3 ./scripts/png_to_txt.py")
+        #os.system("python3 ../scripts/png_to_txt.py")
         print("Mode still under development. Try again soon.")
         quit()
     elif mode == 1:
-        os.system("python ./scripts/conv_to_sv.py")
+        os.system("python ../scripts/conv_to_sv.py")
         quit()
     else:
         print("Please enter a valid number.")

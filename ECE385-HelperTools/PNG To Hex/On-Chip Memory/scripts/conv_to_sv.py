@@ -44,7 +44,7 @@ locale.setlocale(locale.LC_ALL, '')
 github = "https://github.com/Atrifex/ECE385-HelperTools"
 image_extension = ".png"
 image_viewer = "feh"
-parent_dir = "./" # Atrifex, this is .. since you moved the scripts into ./scripts
+parent_dir = "../" # Atrifex, this is .. since you moved the scripts into ./scripts
 bytes_dir = parent_dir + "sprite_bytes/"
 sv_dir = bytes_dir
 orig_dir = parent_dir + "sprite_originals/"
