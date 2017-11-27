@@ -9,11 +9,11 @@ module receptor(
 always_comb begin
 	is_background = 1'b0;
 	is_receptor_background = 1'b0;
-	
+
 	if ( DrawX >= 10'd256 && DrawX <= 10'd383 )
 		is_background = 1'b1;
 
-	if ( DrawY >= 10'd400 && DrawY <= 10'd449 )
+	if ( DrawY >= 10'd30 && DrawY <= 10'd79 )
 		if ( DrawX >= 10'd256 && DrawX <= 10'd383 )
 			is_receptor_background = 1'b1;
 end
@@ -21,7 +21,7 @@ end
 // everything will always be left, down, up, right.
 always_comb begin // receptors
 	is_receptor[3:0] = 4'b0;
-	if ( DrawY >= 10'd400 && DrawY <= 10'd449 )
+	if ( DrawY >= 10'd30 && DrawY <= 10'd79 )
 	begin
 		if ( DrawX >= 10'd256 && DrawX <= 10'd287 )
 			if ( keycode == 8'h34 )

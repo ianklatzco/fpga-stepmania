@@ -76,7 +76,7 @@ ball ball_inst(
 	.frame_clk          (VGA_VS),
 	.DrawX              (DrawX),
 	.DrawY              (DrawY),
-	.keycode_lower_8bits(keycode[7:0]),
+	.keycode            (keycode[7:0]),
 	.is_ball            (ball)
 );
 

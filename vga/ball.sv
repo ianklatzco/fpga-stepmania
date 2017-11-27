@@ -1,9 +1,8 @@
 // ball movement and is_ball signal
-module  ball ( input         Clk,                // 50 MHz clock
-                             Reset,              // Active-high reset signal
+module  ball ( input         Clk, Reset,
                              frame_clk,          // The clock indicating a new frame (~60Hz)
                input [9:0]   DrawX, DrawY,       // Current pixel coordinates
-               input [7:0]   keycode_lower_8bits,
+               input [7:0]   keycode,
                output logic  is_ball             // Whether current pixel belongs to ball or background
               );
     
@@ -71,22 +70,22 @@ module  ball ( input         Clk,                // 50 MHz clock
         // 52 up
         // 4f rigth
         //pressing two keys will make the ball go 
-        if ( keycode_lower_8bits == 8'h04 ) // left
+        if ( keycode == 8'h04 ) // left
         begin
             Ball_Y_Motion_in = 10'b0;
             Ball_X_Motion_in = (~(Ball_X_Step) + 1'b1); // 2's comp
         end
-        else if ( keycode_lower_8bits == 8'h16) // down
+        else if ( keycode == 8'h16) // down
         begin
             Ball_X_Motion_in = 10'b0;
             Ball_Y_Motion_in = Ball_Y_Step;
         end
-        else if ( keycode_lower_8bits == 8'h1a) // up
+        else if ( keycode == 8'h1a) // up
         begin
             Ball_X_Motion_in = 10'b0;
             Ball_Y_Motion_in = (~(Ball_Y_Step) + 1'b1);
         end
-        else if ( keycode_lower_8bits == 8'h07) // right
+        else if ( keycode == 8'h07) // right
         begin
             Ball_Y_Motion_in = 10'b0;
             Ball_X_Motion_in = Ball_X_Step;
