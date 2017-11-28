@@ -47,6 +47,26 @@ logic [9:0] DrawX, DrawY;
 logic ball, background, receptor_background;
 logic [3:0] receptor, display_arrow;
 
+/*
+		LDATA, RDATA	:      IN std_logic_vector(15 downto 0); -- parallel external data inputs
+		clk, Reset, INIT : IN std_logic; 
+		INIT_FINISH :				OUT std_logic;
+		adc_full :			OUT std_logic;
+		data_over :          OUT std_logic; -- sample sync pulse
+		AUD_MCLK :             OUT std_logic; -- Codec master clock OUTPUT
+		AUD_BCLK :             IN std_logic; -- Digital Audio bit clock
+		AUD_ADCDAT :			IN std_logic;
+		AUD_DACDAT :           OUT std_logic; -- DAC data line
+		AUD_DACLRCK, AUD_ADCLRCK :          IN std_logic; -- DAC data left/right select
+		I2C_SDAT :             OUT std_logic; -- serial interface data line
+		I2C_SCLK :             OUT std_logic;  -- serial interface clock
+		ADCDATA : 				OUT std_logic_vector(31 downto 0)
+*/
+logic INIT_FINISH, adc_full, data_over;
+logic [31:0] ADCDATA;	
+audio_interface sound(.clk(Clk), .Reset(reset), .LDATA(1'b1), .RDATA(1'b1), 
+	.INIT(1'b1), .INIT_FINISH(INIT_FINISH), .adc_full(adc_full), .data_over(data_over), .ADCDATA(ADCDATA));
+
 vga_controller vga_controller_inst(
 	.Clk        (Clk),
 	.Reset      (reset),
