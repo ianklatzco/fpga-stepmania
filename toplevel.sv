@@ -7,7 +7,10 @@ module toplevel (
 	output logic VGA_CLK, VGA_SYNC_N, VGA_BLANK_N, VGA_VS, VGA_HS,
 
 	output logic [6:0] HEX0, HEX1, HEX2,
-	output logic [9:0] LEDG
+	output logic [9:0] LEDG,
+	
+	output logic AUD_DACDAT, I2C_SDAT, I2C_SCLK, 
+	output logic [31:0] ADCDATA
 );
 
 logic Clk, reset;
@@ -47,6 +50,10 @@ logic [9:0] DrawX, DrawY;
 logic ball, background, receptor_background;
 logic [3:0] receptor, display_arrow;
 
+//timer
+logic [3:0] arrows;
+timer counter(.Clk(Clk), .Reset(reset), .arrows(arrows));
+
 /*
 		LDATA, RDATA	:      IN std_logic_vector(15 downto 0); -- parallel external data inputs
 		clk, Reset, INIT : IN std_logic; 
@@ -62,10 +69,13 @@ logic [3:0] receptor, display_arrow;
 		I2C_SCLK :             OUT std_logic;  -- serial interface clock
 		ADCDATA : 				OUT std_logic_vector(31 downto 0)
 */
-logic INIT_FINISH, adc_full, data_over;
-logic [31:0] ADCDATA;	
-audio_interface sound(.clk(Clk), .Reset(reset), .LDATA(1'b1), .RDATA(1'b1), 
-	.INIT(1'b1), .INIT_FINISH(INIT_FINISH), .adc_full(adc_full), .data_over(data_over), .ADCDATA(ADCDATA));
+
+logic INIT_FINISH, adc_full, data_over;//, I2C_SDAT, I2C_SCLK;
+//logic [31:0] ADCDATA;	
+
+audio_interface sound(.clk(Clk), .Reset(reset), .LDATA(12'd2048), .RDATA(12'd2048), 
+	.INIT(1'b1), .INIT_FINISH(INIT_FINISH), .adc_full(adc_full), .data_over(data_over), .ADCDATA(ADCDATA)
+		, .I2C_SDAT(I2C_SDAT), .I2C_SCLK(I2C_SCLK));
 
 vga_controller vga_controller_inst(
 	.Clk        (Clk),

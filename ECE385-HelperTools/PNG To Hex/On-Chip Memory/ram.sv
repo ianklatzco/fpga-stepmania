@@ -18,7 +18,8 @@ logic [2:0] mem [0:399];
 
 initial
 begin
-	 $readmemh("sprite_bytes/tetris_I.txt", mem);
+	 //$readmemh("sprite_bytes/tetris_I.txt", mem);
+	
 end
 
 
