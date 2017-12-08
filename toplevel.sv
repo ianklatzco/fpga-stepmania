@@ -9,7 +9,13 @@ module toplevel (
 	output logic [6:0] HEX0, HEX1, HEX2,
 	output logic [9:0] LEDG,
 	
-	output logic AUD_DACDAT, I2C_SDAT, I2C_SCLK, 
+	output logic AUD_DACDAT, I2C_SCLK, 
+	inout I2C_SDAT,
+
+	output AUD_XCK,
+	input AUD_DACLRCK, AUD_ADCLRCK, AUD_BCLK,
+	input AUD_ADCDAT,
+
 	output logic [31:0] ADCDATA
 );
 
@@ -73,6 +79,27 @@ keyboard keyboard_inst(
 		GPIO_1 : inout std_logic_vector(35 downto 0);
 		HEX0,HEX1,HEX2,HEX3 : out std_logic_vector(6 downto 0));
 */
+
+// uw
+logic advance;
+logic [23:0] dac_left, dac_right;
+audio_driver audio_driver_inst(
+	.CLOCK_50, .reset,
+	.dac_left( $signed(dac_out) ), .dac_right(24'hFFFFFF),
+	// .adc_left, .adc_right, // don't care so we don't need to hook them up
+	// .advance, // don't care: output to signal that there's been input
+	.FPGA_I2C_SCLK(I2C_SCLK), .FPGA_I2C_SDAT(I2C_SDAT), .AUD_DACLRCK,// .AUD_XCK(CLOCK_50), // remove bc the xck was configured for different hardware
+	.AUD_ADCLRCK, .AUD_BCLK, .AUD_ADCDAT, .AUD_DACDAT
+);
+
+assign AUD_XCK = CLOCK_50;
+
+logic dac_out;
+square_wave square_wave_inst(
+	.clk    (Clk),
+	.rst    (reset),
+	.dac_out(dac_out)
+);
 
 // end audio
 // begin display
