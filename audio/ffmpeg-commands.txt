@@ -1,0 +1,2 @@
+ffmpeg -t 2 -i piano0.wav piano1.wav
+ffmpeg -i piano0.wav -ac 1 piano2.wav

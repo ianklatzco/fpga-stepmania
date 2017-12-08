@@ -9,14 +9,16 @@ module toplevel (
 	output logic [6:0] HEX0, HEX1, HEX2,
 	output logic [9:0] LEDG,
 	
-	output logic AUD_DACDAT, I2C_SCLK, 
+	// audio IO
+	output logic AUD_DACDAT, I2C_SCLK, AUD_XCK,
 	inout I2C_SDAT,
+	input AUD_DACLRCK, AUD_ADCLRCK, AUD_BCLK, AUD_ADCDAT,
+	output logic [31:0] ADCDATA,
 
-	output AUD_XCK,
-	input AUD_DACLRCK, AUD_ADCLRCK, AUD_BCLK,
-	input AUD_ADCDAT,
-
-	output logic [31:0] ADCDATA
+	// SRAM io
+	inout wire [15:0] SRAM_DQ, //tristate buffers need to be of type wire
+	output logic SRAM_CE_N, SRAM_UB_N, SRAM_LB_N, SRAM_OE_N, SRAM_WE_N,
+	output logic [19:0] SRAM_ADDR
 );
 
 // clock and reset
@@ -51,57 +53,43 @@ keyboard keyboard_inst(
 	.press  (keypress)
 );
 
-// audio
+// audio //////////////////////////////////////////////////////////////////////
 
-// koushik roy's vhdl
-// logic INIT_FINISH, adc_full, data_over;//, I2C_SDAT, I2C_SCLK;
-// //logic [31:0] ADCDATA;	
+logic [15:0] audio_data;
+logic [15:0] Data_from_SRAM, Data_to_SRAM;
+assign AUD_XCK = CLOCK_50;
 
-// audio_interface audio_interface_inst(
-// 	.clk(Clk), .Reset(reset), .LDATA(12'd2048), .RDATA(12'd2048), 
-// 	.INIT(1'b1), .INIT_FINISH(INIT_FINISH), .adc_full(adc_full), .data_over(data_over), .ADCDATA(ADCDATA),
-// 	.I2C_SDAT(I2C_SDAT), .I2C_SCLK(I2C_SCLK)
-// );
-
-/*
-		CLOCK_50 : in std_logic;
-		CLOCK_27 : in std_logic_vector(1 downto 0);
-		KEY : in std_logic_vector(3 downto 0);
-		SW : in std_logic_vector(9 downto 0);
-		AUD_ADCLRCK : out std_logic;
-		AUD_ADCDAT : in std_logic;
-		AUD_DACLRCK : out std_logic;
-		AUD_DACDAT : out std_logic;
-		AUD_XCK : out std_logic;
-		AUD_BCLK : out std_logic;
-		I2C_SCLK : out std_logic; -- master (our module) drives i2c clock
-		I2C_SDAT : inout std_logic;
-		GPIO_1 : inout std_logic_vector(35 downto 0);
-		HEX0,HEX1,HEX2,HEX3 : out std_logic_vector(6 downto 0));
-*/
+// synchronizers for ram writes
+logic SYNC_OE, SYNC_WE;
+sync sync_0(.Clk, .d(SRAM_WE_N), .q(SYNC_WE));
+sync sync_1(.Clk, .d(SRAM_OE_N), .q(SYNC_OE));
 
 // uw
 logic advance;
 logic [23:0] dac_left, dac_right;
 audio_driver audio_driver_inst(
 	.CLOCK_50, .reset,
-	.dac_left( $signed(dac_out) ), .dac_right(24'hFFFFFF),
+	.dac_left( $unsigned(audio_data) ), .dac_right(24'hFFFFFF),
 	// .adc_left, .adc_right, // don't care so we don't need to hook them up
 	// .advance, // don't care: output to signal that there's been input
 	.FPGA_I2C_SCLK(I2C_SCLK), .FPGA_I2C_SDAT(I2C_SDAT), .AUD_DACLRCK,// .AUD_XCK(CLOCK_50), // remove bc the xck was configured for different hardware
 	.AUD_ADCLRCK, .AUD_BCLK, .AUD_ADCDAT, .AUD_DACDAT
 );
 
-assign AUD_XCK = CLOCK_50;
-
-logic dac_out;
-square_wave square_wave_inst(
-	.clk    (Clk),
-	.rst    (reset),
-	.dac_out(dac_out)
+// SRAM for audio
+tristate #(.N(16)) tristate_inst(
+    .Clk(Clk), .tristate_write_enable(~SYNC_WE), .Data_write(Data_to_SRAM),
+    .Data_read(Data_from_SRAM), .Data(SDRAM_DQ) // i believe all we care about is Data
 );
 
-// end audio
+sram_reading_fsm sram_reading_fsm_inst(
+	.Clk(Clk), .reset(reset),
+	.data_from_sram(SDRAM_DQ),
+	.SRAM_CE_N, .SRAM_UB_N, .SRAM_LB_N, .SRAM_OE_N, .SRAM_WE_N,
+	.SRAM_ADDR
+);
+
+// end audio //////////////////////////////////////////////////////////////////
 // begin display
 
 logic [9:0] DrawX, DrawY;
@@ -113,6 +101,7 @@ logic [3:0] receptor, display_arrow;
 logic [3:0] arrows;
 timer counter(.Clk(Clk), .Reset(reset), .arrows(arrows));
 
+// mostly from VGA lab
 vga_controller vga_controller_inst(
 	.Clk        (Clk),
 	.Reset      (reset),
@@ -167,3 +156,11 @@ arrow arrow_inst(
 // endisplay
 
 endmodule // toplevel
+
+// sychronizer for outputs to SRAM
+module sync (input  logic Clk, d, output logic q );
+    always_ff @ (posedge Clk)
+    begin
+        q <= d;
+    end
+endmodule
