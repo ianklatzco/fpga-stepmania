@@ -47,6 +47,32 @@ keyboard keyboard_inst(
 
 // audio
 
+// koushik roy's vhdl
+// logic INIT_FINISH, adc_full, data_over;//, I2C_SDAT, I2C_SCLK;
+// //logic [31:0] ADCDATA;	
+
+// audio_interface audio_interface_inst(
+// 	.clk(Clk), .Reset(reset), .LDATA(12'd2048), .RDATA(12'd2048), 
+// 	.INIT(1'b1), .INIT_FINISH(INIT_FINISH), .adc_full(adc_full), .data_over(data_over), .ADCDATA(ADCDATA),
+// 	.I2C_SDAT(I2C_SDAT), .I2C_SCLK(I2C_SCLK)
+// );
+
+/*
+		CLOCK_50 : in std_logic;
+		CLOCK_27 : in std_logic_vector(1 downto 0);
+		KEY : in std_logic_vector(3 downto 0);
+		SW : in std_logic_vector(9 downto 0);
+		AUD_ADCLRCK : out std_logic;
+		AUD_ADCDAT : in std_logic;
+		AUD_DACLRCK : out std_logic;
+		AUD_DACDAT : out std_logic;
+		AUD_XCK : out std_logic;
+		AUD_BCLK : out std_logic;
+		I2C_SCLK : out std_logic; -- master (our module) drives i2c clock
+		I2C_SDAT : inout std_logic;
+		GPIO_1 : inout std_logic_vector(35 downto 0);
+		HEX0,HEX1,HEX2,HEX3 : out std_logic_vector(6 downto 0));
+*/
 
 // end audio
 // begin display
