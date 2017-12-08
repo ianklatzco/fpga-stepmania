@@ -1118,7 +1118,6 @@ set_instance_assignment -name FAST_INPUT_REGISTER ON -to *
 set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to *
 set_instance_assignment -name TSU_REQUIREMENT "10 ns" -from * -to *
 set_global_assignment -name SYSTEMVERILOG_FILE timer.sv
-set_global_assignment -name VHDL_FILE "ECE385-HelperTools/Audio Helper/audio_interface.vhd"
 set_global_assignment -name SYSTEMVERILOG_FILE vga/arrow.sv
 set_global_assignment -name SYSTEMVERILOG_FILE vga/receptor.sv
 set_global_assignment -name SYSTEMVERILOG_FILE vga/ball.sv

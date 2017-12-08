@@ -13,6 +13,7 @@ module toplevel (
 	output logic [31:0] ADCDATA
 );
 
+// clock and reset
 logic Clk, reset;
 assign Clk = CLOCK_50;
 always_ff @ (posedge Clk) begin
@@ -26,6 +27,7 @@ always_ff @ (posedge Clk) begin
 	else
 		VGA_CLK <= ~VGA_CLK;
 end    
+// end clock and reset
 
 logic [7:0] keycode;
 logic keypress;
@@ -43,7 +45,11 @@ keyboard keyboard_inst(
 	.press  (keypress)
 );
 
-// display
+// audio
+
+
+// end audio
+// begin display
 
 logic [9:0] DrawX, DrawY;
 // signals to tell color mapper to draw on screen
@@ -53,29 +59,6 @@ logic [3:0] receptor, display_arrow;
 //timer
 logic [3:0] arrows;
 timer counter(.Clk(Clk), .Reset(reset), .arrows(arrows));
-
-/*
-		LDATA, RDATA	:      IN std_logic_vector(15 downto 0); -- parallel external data inputs
-		clk, Reset, INIT : IN std_logic; 
-		INIT_FINISH :				OUT std_logic;
-		adc_full :			OUT std_logic;
-		data_over :          OUT std_logic; -- sample sync pulse
-		AUD_MCLK :             OUT std_logic; -- Codec master clock OUTPUT
-		AUD_BCLK :             IN std_logic; -- Digital Audio bit clock
-		AUD_ADCDAT :			IN std_logic;
-		AUD_DACDAT :           OUT std_logic; -- DAC data line
-		AUD_DACLRCK, AUD_ADCLRCK :          IN std_logic; -- DAC data left/right select
-		I2C_SDAT :             OUT std_logic; -- serial interface data line
-		I2C_SCLK :             OUT std_logic;  -- serial interface clock
-		ADCDATA : 				OUT std_logic_vector(31 downto 0)
-*/
-
-logic INIT_FINISH, adc_full, data_over;//, I2C_SDAT, I2C_SCLK;
-//logic [31:0] ADCDATA;	
-
-audio_interface sound(.clk(Clk), .Reset(reset), .LDATA(12'd2048), .RDATA(12'd2048), 
-	.INIT(1'b1), .INIT_FINISH(INIT_FINISH), .adc_full(adc_full), .data_over(data_over), .ADCDATA(ADCDATA)
-		, .I2C_SDAT(I2C_SDAT), .I2C_SCLK(I2C_SCLK));
 
 vga_controller vga_controller_inst(
 	.Clk        (Clk),
