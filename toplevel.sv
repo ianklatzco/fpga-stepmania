@@ -1,12 +1,12 @@
 module toplevel (
-	input  logic [3:0] KEY,
+	input  logic [3:0] KEY, // 3 = continue, 2 = start
 	input  logic CLOCK_50,
 
 	input  logic PS2_KBCLK, PS2_KBDAT,
 	output logic [7:0]  VGA_R, VGA_G, VGA_B,
 	output logic VGA_CLK, VGA_SYNC_N, VGA_BLANK_N, VGA_VS, VGA_HS,
 
-	output logic [6:0] HEX0, HEX1, HEX2,
+	output logic [6:0] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5, HEX6, HEX7,
 	output logic [9:0] LEDG,
 	
 	// audio IO
@@ -20,6 +20,10 @@ module toplevel (
 	output logic SRAM_CE_N, SRAM_UB_N, SRAM_LB_N, SRAM_OE_N, SRAM_WE_N,
 	output logic [19:0] SRAM_ADDR
 );
+
+logic start, cont; // continue
+assign cont = KEY[3];
+assign start = KEY[2];
 
 // clock and reset
 logic Clk, reset;
@@ -42,8 +46,14 @@ logic keypress;
 assign LEDG[8] = keypress;
 assign LEDG[7:0] = keycode;
 
+// for keycode
 HexDriver hex_driver_0 ( .In0 (keycode[3:0]), .Out0(HEX0) );
 HexDriver hex_driver_1 ( .In0 (keycode[7:4]), .Out0(HEX1) );
+
+HexDriver hex_driver_4 ( .In0 (), .Out0(HEX4) );
+HexDriver hex_driver_5 ( .In0 (), .Out0(HEX5) );
+HexDriver hex_driver_6 ( .In0 (), .Out0(HEX6) );
+HexDriver hex_driver_7 ( .In0 (), .Out0(HEX7) );
 
 keyboard keyboard_inst(
 	.Clk    (Clk),
@@ -84,7 +94,7 @@ tristate #(.N(16)) tristate_inst(
 
 sram_reading_fsm sram_reading_fsm_inst(
 	.Clk(Clk), .reset(reset),
-	.data_from_sram(SDRAM_DQ),
+	.start, .cont,
 	.SRAM_CE_N, .SRAM_UB_N, .SRAM_LB_N, .SRAM_OE_N, .SRAM_WE_N,
 	.SRAM_ADDR
 );

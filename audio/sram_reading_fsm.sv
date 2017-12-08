@@ -3,12 +3,78 @@
 module sram_reading_fsm (
 	input Clk,
 	input reset,
-	input data_from_sram,
+	input start, cont,
 
 	output logic SRAM_CE_N, SRAM_UB_N, SRAM_LB_N, SRAM_OE_N, SRAM_WE_N,
 	output logic [19:0] SRAM_ADDR
 	
 );
+
+// first: make it read one sample to LEDs for every press of KEY[3]
+// load piano2.rom onto SRAM using the crappy utility (on desktop)
+// write this FSM to read off SRAM
+
+enum logic [1:0] {
+	halted, 
+	reading_sample_1,
+	reading_sample_2,
+	done
+}   state, next_state;
+
+// reset behavior
+always_ff @ (posedge Clk)
+begin
+    if (reset) 
+        state <= halted;
+    else 
+        state <= next_state;
+end
+
+always_comb
+begin 
+    // Default next state is staying at current state
+    next_state = state;
+ 
+    unique case (state)
+        halted : 
+            if (start) 
+                next_state = reading_sample_1;                      
+        reading_sample_1:
+        	next_state = reading_sample_2;
+        reading_sample_2:
+        	next_state = done;
+        done:
+        	next_state = halted;
+        default : ;
+	endcase
+
+	// default values for output signals
+	SRAM_OE_N = 1'b1;
+	SRAM_WE_N = 1'b1;
+
+	// always active
+    assign Mem_CE = 1'b0;
+    assign Mem_UB = 1'b0;
+    assign Mem_LB = 1'b0;
+
+	case (state):
+		halted: ;
+		reading_sample_1:
+			begin
+				SRAM_OE_N = 1'b0;
+			end
+		reading_sample_2:
+			begin
+				SRAM_OE_N = 1'b0;
+			end
+		done: ;
+		default: ;
+	endcase
+
+end
+
+
+
 
 /*
 int counter = 0;
