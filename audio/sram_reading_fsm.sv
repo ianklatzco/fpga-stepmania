@@ -14,6 +14,9 @@ module sram_reading_fsm (
 // load piano2.rom onto SRAM using the crappy utility (on desktop)
 // write this FSM to read off SRAM
 
+logic [15:0] address;
+assign SRAM_ADDR = { 4'b0, address };
+
 enum logic [1:0] {
 	halted, 
 	reading_sample_1,
@@ -32,12 +35,11 @@ end
 
 always_comb
 begin 
-    // Default next state is staying at current state
-    next_state = state;
+    next_state = state; // Default next state is staying at current state
  
     unique case (state)
         halted : 
-            if (start) 
+            if (cont) // if we've hit the continue button, go fetch another sample
                 next_state = reading_sample_1;                      
         reading_sample_1:
         	next_state = reading_sample_2;
@@ -51,6 +53,7 @@ begin
 	// default values for output signals
 	SRAM_OE_N = 1'b1;
 	SRAM_WE_N = 1'b1;
+	address = 16'b0;
 
 	// always active
     assign Mem_CE = 1'b0;
@@ -60,13 +63,14 @@ begin
 	case (state):
 		halted: ;
 		reading_sample_1:
-			begin
-				SRAM_OE_N = 1'b0;
-			end
+		begin
+			address = address + 1; // todo: wrong - address needs to be latched somewhere. just write one inside this file, and make the signal on this line of code be its load signal, so it updates when we reach this state.
+			SRAM_OE_N = 1'b0;
+		end
 		reading_sample_2:
-			begin
-				SRAM_OE_N = 1'b0;
-			end
+		begin
+			SRAM_OE_N = 1'b0;
+		end
 		done: ;
 		default: ;
 	endcase
