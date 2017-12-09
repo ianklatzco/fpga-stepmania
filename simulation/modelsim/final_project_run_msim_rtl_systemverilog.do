@@ -12,6 +12,7 @@ vlog -sv -work work +incdir+C:/Users/klatzco2/ece385-final-project/vga {C:/Users
 vlog -sv -work work +incdir+C:/Users/klatzco2/ece385-final-project/vga {C:/Users/klatzco2/ece385-final-project/vga/color_mapper.sv}
 vlog -sv -work work +incdir+C:/Users/klatzco2/ece385-final-project {C:/Users/klatzco2/ece385-final-project/hex_driver.sv}
 vlog -sv -work work +incdir+C:/Users/klatzco2/ece385-final-project {C:/Users/klatzco2/ece385-final-project/toplevel.sv}
+vlog -sv -work work +incdir+C:/Users/klatzco2/ece385-final-project {C:/Users/klatzco2/ece385-final-project/testbench.sv}
 vlog -sv -work work +incdir+C:/Users/klatzco2/ece385-final-project/ps2_kb {C:/Users/klatzco2/ece385-final-project/ps2_kb/Dreg.sv}
 vlog -sv -work work +incdir+C:/Users/klatzco2/ece385-final-project/ps2_kb {C:/Users/klatzco2/ece385-final-project/ps2_kb/11_reg.sv}
 vlog -sv -work work +incdir+C:/Users/klatzco2/ece385-final-project/ps2_kb {C:/Users/klatzco2/ece385-final-project/ps2_kb/keyboard.sv}

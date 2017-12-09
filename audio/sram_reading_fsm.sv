@@ -6,25 +6,26 @@ module sram_reading_fsm (
 	input start, cont,
 
 	output logic SRAM_CE_N, SRAM_UB_N, SRAM_LB_N, SRAM_OE_N, SRAM_WE_N,
-	output logic [19:0] SRAM_ADDR
+	output logic [19:0] SRAM_ADDR,
+	output logic sram_data_load
 	
 );
 
 // first: make it read one sample to LEDs for every press of KEY[3]
 // load piano2.rom onto SRAM using the crappy utility (on desktop)
 // write this FSM to read off SRAM
-logic [15:0] address;
 logic sram_reg_load;
 
-reg_16 sram_reg(.clk(Clk), .reset(reset),
- .load (sram_reg_load), .din(address), .dout(SRAM_ADDR[15:0]));
+counter_reg sram_reg(
+	.clk(Clk), .reset(reset),
+	.load (sram_reg_load), .dout({4'b0, SRAM_ADDR[15:0]})
+);
 
-//assign SRAM_ADDR = { 4'b0, address };
-
-enum logic [1:0] {
+enum logic [2:0] {
 	halted, 
 	reading_sample_1,
 	reading_sample_2,
+	reading_sample_3,
 	done
 }   state, next_state;
 
@@ -46,9 +47,12 @@ begin
             if (cont) // if we've hit the continue button, go fetch another sample
                 next_state = reading_sample_1;                      
         reading_sample_1:
-        	next_state = reading_sample_2;
+	        	next_state = reading_sample_2;
         reading_sample_2:
-        	next_state = done;
+	        	next_state = reading_sample_3;
+        reading_sample_3:
+        	if(~cont)
+	        	next_state = done;
         done:
         	next_state = halted;
         default : ;
@@ -57,15 +61,10 @@ begin
 	// default values for output signals
 	SRAM_OE_N = 1'b1;
 	SRAM_WE_N = 1'b1;
-	address = 16'b0;
 	sram_reg_load = 1'b0;
+	sram_data_load = 1'b0;
 
 	// always active
-	/*
-    assign SRAM_CE_N = 1'b0;
-    assign SRAM_UB_N = 1'b0;
-    assign SRAM_LB_N = 1'b0;
-	*/
     SRAM_CE_N = 1'b0;
     SRAM_UB_N = 1'b0;
  	SRAM_LB_N = 1'b0;
@@ -75,51 +74,31 @@ begin
 		//halted: ;
 		reading_sample_1:
 		begin
-			address = address + 16; // todo: wrong - address needs to be latched somewhere. just write one inside this file, and make the signal on this line of code be its load signal, so it updates when we reach this state.
-			sram_reg_load = 1'b1;
 			SRAM_OE_N = 1'b0;
 		end
 		reading_sample_2:
 		begin
 			SRAM_OE_N = 1'b0;
 		end
-		done: ;
+		reading_sample_3:
+		begin
+			SRAM_OE_N = 1'b0;
+	        sram_data_load = 1'b1;
+		end
+		done:
+			sram_reg_load = 1'b1;
 		default: ;
 	endcase
 
 end
-
-
-
-
-/*
-int counter = 0;
-// playback of ROM
-always_ff @(posedge Clk or posedge reset)
-begin
-	if(reset) begin
-		counter <= 0;
-	end else begin
-		if (counter >= 1000) begin
-			audio_data <= mem[0];
-			counter <= 0;
-		end else begin
-		 	audio_data <= mem[counter];
-			counter <= counter + 1;
-		end
-	end
-end
-*/
-
-
 endmodule
 
-module reg_16 (
-	input clk,    // Clock
-	input reset, // Clock Enable
-	input load,
-	input [15:0] din,  // Asynchronous reset active low
-	output [15:0] dout
+module counter_reg (
+	input  logic clk,    // Clock
+	input  logic reset, // Clock Enable
+	input  logic load,
+	//input [15:0] din,  // Asynchronous reset active low
+	output logic [15:0] dout
 );
 always_ff @(posedge clk)
 begin
@@ -127,7 +106,7 @@ begin
 		dout <= 16'b0;
 	end 
 	else if(load) begin
-		dout <= din;
+		dout <= dout+1;
 	end
 end
 

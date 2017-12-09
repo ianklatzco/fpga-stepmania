@@ -1,0 +1,5 @@
+PLL_Name	audio_driver:audio_driver_inst|audio:xck_source|audio_altpll_0:altpll_0|audio_altpll_0_altpll_7d42:sd1|pll7
+PLLJITTER	15
+PLLSPEmax	84
+PLLSPEmin	-53
+
