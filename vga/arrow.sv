@@ -9,8 +9,20 @@ module arrow (
 );
 
 // some static values
+/*
 parameter [9:0] arrow_center_x = 320-64;  // Center position on the X axis
 parameter [9:0] arrow_center_y = 240;  // Center position on the Y axis
+*/
+parameter [9:0] arrow_center_x = 320-64;  // Center position on the X axis
+parameter [9:0] arrow_center_y = 240;  // Center position on the Y axisparameter [9:0] y_end;
+
+
+//movement variables
+//so the plan is to make a static arrow sprite at the bottom
+//and then make the movement of the arrow nonzero whenever the 'beat'
+//signal is sent.
+logic [9:0] y_step;
+assign y_step = 2;
 
 // position variables
 logic [9:0] x_pos, y_pos;   // position on screen of arrow
