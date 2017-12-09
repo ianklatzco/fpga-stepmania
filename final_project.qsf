@@ -1117,7 +1117,6 @@ set_instance_assignment -name IO_MAXIMUM_TOGGLE_RATE "0 MHz" -to HEX3[0]
 set_instance_assignment -name FAST_INPUT_REGISTER ON -to *
 set_instance_assignment -name FAST_OUTPUT_REGISTER ON -to *
 set_instance_assignment -name TSU_REQUIREMENT "10 ns" -from * -to *
-set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top
 set_global_assignment -name SYSTEMVERILOG_FILE audio/tristate.sv
 set_global_assignment -name SYSTEMVERILOG_FILE audio/sram_reading_fsm.sv
 set_global_assignment -name SYSTEMVERILOG_FILE audio/audio_loop.sv
@@ -1148,3 +1147,4 @@ set_global_assignment -name SYSTEMVERILOG_FILE ps2_kb/keyboard.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ps2_kb/Dreg.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ps2_kb/11_reg.sv
 set_global_assignment -name SYSTEMVERILOG_FILE "ECE385-HelperTools/PNG To Hex/On-Chip Memory/ram.sv"
+set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

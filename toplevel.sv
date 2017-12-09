@@ -22,8 +22,8 @@ module toplevel (
 );
 
 logic start, cont; // continue
-assign cont = KEY[3];
-assign start = KEY[2];
+assign cont = ~KEY[3];
+assign start = ~KEY[2];
 
 // clock and reset
 logic Clk, reset;
@@ -50,10 +50,10 @@ assign LEDG[7:0] = keycode;
 HexDriver hex_driver_0 ( .In0 (keycode[3:0]), .Out0(HEX0) );
 HexDriver hex_driver_1 ( .In0 (keycode[7:4]), .Out0(HEX1) );
 
-HexDriver hex_driver_4 ( .In0 (), .Out0(HEX4) );
-HexDriver hex_driver_5 ( .In0 (), .Out0(HEX5) );
-HexDriver hex_driver_6 ( .In0 (), .Out0(HEX6) );
-HexDriver hex_driver_7 ( .In0 (), .Out0(HEX7) );
+HexDriver hex_driver_4 ( .In0 (Data_from_SRAM[3:0]), .Out0(HEX4) );
+HexDriver hex_driver_5 ( .In0 (Data_from_SRAM[7:4]), .Out0(HEX5) );
+HexDriver hex_driver_6 ( .In0 (Data_from_SRAM[11:8]), .Out0(HEX6) );
+HexDriver hex_driver_7 ( .In0 (Data_from_SRAM[15:12]), .Out0(HEX7) );
 
 keyboard keyboard_inst(
 	.Clk    (Clk),

@@ -13,9 +13,13 @@ module sram_reading_fsm (
 // first: make it read one sample to LEDs for every press of KEY[3]
 // load piano2.rom onto SRAM using the crappy utility (on desktop)
 // write this FSM to read off SRAM
-
 logic [15:0] address;
-assign SRAM_ADDR = { 4'b0, address };
+logic sram_reg_load;
+
+reg_16 sram_reg(.clk(Clk), .reset(reset),
+ .load (sram_reg_load), .din(address), .dout(SRAM_ADDR[15:0]));
+
+//assign SRAM_ADDR = { 4'b0, address };
 
 enum logic [1:0] {
 	halted, 
@@ -54,17 +58,25 @@ begin
 	SRAM_OE_N = 1'b1;
 	SRAM_WE_N = 1'b1;
 	address = 16'b0;
+	sram_reg_load = 1'b0;
 
 	// always active
-    assign Mem_CE = 1'b0;
-    assign Mem_UB = 1'b0;
-    assign Mem_LB = 1'b0;
+	/*
+    assign SRAM_CE_N = 1'b0;
+    assign SRAM_UB_N = 1'b0;
+    assign SRAM_LB_N = 1'b0;
+	*/
+    SRAM_CE_N = 1'b0;
+    SRAM_UB_N = 1'b0;
+ 	SRAM_LB_N = 1'b0;
 
-	case (state):
-		halted: ;
+
+	case (state)
+		//halted: ;
 		reading_sample_1:
 		begin
-			address = address + 1; // todo: wrong - address needs to be latched somewhere. just write one inside this file, and make the signal on this line of code be its load signal, so it updates when we reach this state.
+			address = address + 16; // todo: wrong - address needs to be latched somewhere. just write one inside this file, and make the signal on this line of code be its load signal, so it updates when we reach this state.
+			sram_reg_load = 1'b1;
 			SRAM_OE_N = 1'b0;
 		end
 		reading_sample_2:
@@ -99,5 +111,24 @@ begin
 end
 */
 
+
+endmodule
+
+module reg_16 (
+	input clk,    // Clock
+	input reset, // Clock Enable
+	input load,
+	input [15:0] din,  // Asynchronous reset active low
+	output [15:0] dout
+);
+always_ff @(posedge clk)
+begin
+	if(reset) begin
+		dout <= 16'b0;
+	end 
+	else if(load) begin
+		dout <= din;
+	end
+end
 
 endmodule
