@@ -97,8 +97,7 @@ module audio_driver (CLOCK_50, reset, dac_left, dac_right, adc_left, adc_right, 
 		end
 	`else
 		// PLL produces clock at correct frequency for CODEC
-		audio xck_source (.clk_clk(CLOCK_50),.reset_reset_n(reset),.pll_clk_out_18mhz_clk(AUD_XCK));
-		// assign AUD_XCK = CLOCK_50;
+		// audio xck_source (.clk_clk(CLOCK_50),.reset_reset_n(reset),.pll_clk_out_18mhz_clk(AUD_XCK));
 	`endif
 	
 	

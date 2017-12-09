@@ -66,10 +66,10 @@ HexDriver hex_driver_1 ( .In0 (sram_data_out[7:4]), .Out0(HEX1) );
 HexDriver hex_driver_2 ( .In0 (sram_data_out[11:8]), .Out0(HEX2) );
 HexDriver hex_driver_3 ( .In0 (sram_data_out[15:12]), .Out0(HEX3) );
 
-HexDriver hex_driver_4 ( .In0 (SRAM_DQ[3:0]), .Out0(HEX4) );
-HexDriver hex_driver_5 ( .In0 (SRAM_DQ[7:4]), .Out0(HEX5) );
-HexDriver hex_driver_6 ( .In0 (SRAM_DQ[11:8]), .Out0(HEX6) );
-HexDriver hex_driver_7 ( .In0 (SRAM_DQ[15:12]), .Out0(HEX7) );
+HexDriver hex_driver_4 ( .In0 (SRAM_ADDR[3:0]), .Out0(HEX4) );
+HexDriver hex_driver_5 ( .In0 (SRAM_ADDR[7:4]), .Out0(HEX5) );
+HexDriver hex_driver_6 ( .In0 (SRAM_ADDR[11:8]), .Out0(HEX6) );
+HexDriver hex_driver_7 ( .In0 (SRAM_ADDR[15:12]), .Out0(HEX7) );
 
 keyboard keyboard_inst(
 	.Clk    (Clk),
@@ -84,21 +84,20 @@ keyboard keyboard_inst(
 assign AUD_XCK = CLOCK_50;
 
 // synchronizers for ram writes
-logic clk_div, aud_xck_div_clk;
+logic clk_div, xck_divider;
 
 // uw
-logic advance;
 logic [23:0] dac_left, dac_right;
 audio_driver audio_driver_inst(
 	.CLOCK_50, .reset,
-	.dac_left( $signed(sq_wv) ), .dac_right(24'hFFFFFF),
+	.dac_left( $signed(sram_data_out) ), .dac_right( $signed(sram_data_out) ),
 	// .adc_left, .adc_right, // don't care so we don't need to hook them up
 	// .advance, // don't care: output to signal that there's been input
 	.FPGA_I2C_SCLK(I2C_SCLK), .FPGA_I2C_SDAT(I2C_SDAT), .AUD_DACLRCK, //.AUD_XCK,
 	.AUD_ADCLRCK, .AUD_BCLK, .AUD_ADCDAT, .AUD_DACDAT
 );
 
-logic [15:0] sq_wv;
+logic sq_wv;
 
 square_wave sq_inst (
 	.clk(Clk),
@@ -127,7 +126,7 @@ ClkDivider clk_divider_inst(
 
 aud_xck_divider aud_xck_divider_inst(
 	.clk    (Clk), .rst    (reset),
-	.clk_div(aud_xck_div_clk)
+	.clk_div(xck_divider)
 );
 
 // end audio //////////////////////////////////////////////////////////////////

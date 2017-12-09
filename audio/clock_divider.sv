@@ -6,7 +6,8 @@ module ClkDivider (
     output reg clk_div
     );
 
-localparam constantNumber = 1134;
+// localparam constantNumber = 1134; // 44.1
+localparam constantNumber = 3000; // 
 
 // 50 000 000 / constantNumber = clk_div's rate
 
@@ -41,7 +42,7 @@ module aud_xck_divider (
     output reg clk_div
     );
 
-localparam constantNumber = 2;
+localparam constantNumber = 3;
 
 // 50 000 000 / constantNumber = clk_div's rate
 
