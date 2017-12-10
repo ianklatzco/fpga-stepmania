@@ -1117,6 +1117,10 @@ set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
 set_global_assignment -name LL_ROOT_REGION ON -section_id "Root Region"
 set_global_assignment -name LL_MEMBER_STATE LOCKED -section_id "Root Region"
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
+set_global_assignment -name SYSTEMVERILOG_FILE "ECE385-HelperTools/PNG To Hex/On-Chip Memory/sprite_bytes/up.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "ECE385-HelperTools/PNG To Hex/On-Chip Memory/sprite_bytes/right.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "ECE385-HelperTools/PNG To Hex/On-Chip Memory/sprite_bytes/left.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "ECE385-HelperTools/PNG To Hex/On-Chip Memory/sprite_bytes/down.sv"
 set_global_assignment -name QSYS_FILE audio/pll/audio.qsys
 set_global_assignment -name SYSTEMVERILOG_FILE audio/clock_divider.sv
 set_global_assignment -name SYSTEMVERILOG_FILE audio/test_memory.sv
@@ -1151,4 +1155,5 @@ set_global_assignment -name SYSTEMVERILOG_FILE ps2_kb/keyboard.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ps2_kb/Dreg.sv
 set_global_assignment -name SYSTEMVERILOG_FILE ps2_kb/11_reg.sv
 set_global_assignment -name SYSTEMVERILOG_FILE "ECE385-HelperTools/PNG To Hex/On-Chip Memory/ram.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE step_chart.sv
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

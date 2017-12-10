@@ -8,7 +8,12 @@ module  color_mapper (
                      );
     
     logic [7:0] Red, Green, Blue;
-    
+    /*
+	 down downarrow();
+	 up uparrow();
+	 left leftarrow();
+	 right rightarrow();
+	 */
     // Output colors to VGA
     assign VGA_R = Red;
     assign VGA_G = Green;

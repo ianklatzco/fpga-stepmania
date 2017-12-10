@@ -138,6 +138,9 @@ logic [9:0] DrawX, DrawY;
 logic ball, background, receptor_background;
 logic [3:0] receptor, display_arrow;
 
+//
+logic [3:0] display_signal;
+
 //timer
 logic [3:0] arrows;
 timer counter(.Clk(Clk), .Reset(reset), .arrows(arrows));
@@ -190,7 +193,7 @@ arrow arrow_inst(
 	.Clk          (Clk),
 	.reset        (reset),
 	.frame_clk    (VGA_VS),
-	.cont			  (cont),
+	.display_signal(display_signal),
 	.display_arrow(display_arrow),
 	.DrawX (DrawX), .DrawY (DrawY)
 );

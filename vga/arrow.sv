@@ -13,61 +13,10 @@
 // current question: how can i draw multiple arrows to screen? how can i create a memory bank that draws new arrows on screen?
 // how can i create a sprite on a screen?
 // how can i create sprites by reading off a rom?
-// module arrow (
-// 	input  logic       Clk, reset, frame_clk,
-// 	input [9:0]        DrawX, DrawY,
-// 	output logic [3:0] display_arrow
-// );
-
-// // some static values
-// parameter [9:0] arrow_center_x = 320-64;  // Center position on the X axis
-// parameter [9:0] arrow_center_y = 240;  // Center position on the Y axis
-
-// // position variables
-// logic [9:0] x_pos, y_pos;   // position on screen of arrow
-// logic [9:0] x_dist, y_dist; // distance from draw{X,Y} to center of arrow
-// assign x_dist = DrawX - x_pos;
-// assign y_dist = DrawY - y_pos;
-
-// // timing
-// logic frame_clk_delayed, frame_clk_rising_edge;
-// always_ff @ (posedge Clk) begin
-//     frame_clk_delayed <= frame_clk;
-// end
-// assign frame_clk_rising_edge = (frame_clk == 1'b1) && (frame_clk_delayed == 1'b0);
-
-// // reset and every clock cycle behavior
-// always_ff @ (posedge Clk) begin
-//     if (reset)
-//     begin
-//         x_pos <= arrow_center_x;
-//         y_pos <= arrow_center_y;
-//         // Ball_X_Motion <= 10'd0;
-//         // Ball_Y_Motion <= Ball_Y_Step;
-//     end
-//     else if (frame_clk_rising_edge)        // Update only at rising edge of frame clock
-//     begin
-//         // x_pos <= x_pos_in;
-//         // Ball_Y_Pos <= Ball_Y_Pos_in;
-//         // Ball_X_Motion <= Ball_X_Motion_in;
-//         // Ball_Y_Motion <= Ball_Y_Motion_in;
-//     end
-//     // By defualt, keep the register values.
-// end
-
-
-// // output the draw signal
-// always_comb begin
-// 	display_arrow = 1'b0;
-// 	if ( y_dist <= 32 && x_dist <= 32 )
-// 		display_arrow[0] = 1'b1;
-// end
-
-// endmodule
-
 module arrow (
-    input  logic       Clk, reset, frame_clk, cont,
+    input  logic       Clk, reset, frame_clk,
     input [9:0]        DrawX, DrawY,
+	 input [3:0]        display_signal,
     output logic [3:0] display_arrow
 );
 
@@ -144,79 +93,43 @@ begin
 		 arrow2_heights[0] <= 1'b0;
 		 arrow3_heights[0] <= 1'b0;
 
-		 if(cont)
+		 if(display_signal[0])
 		 begin
-			  arrow0_heights[300] <= 1'b1;
-			  arrow1_heights[400] <= 1'b1;
-			  arrow2_heights[350] <= 1'b1;
-			  arrow3_heights[450] <= 1'b1;
-
+			  arrow0_heights[479] <= 1'b1;
+		 end
+		 if(display_signal[1])
+		 begin
+			  arrow1_heights[479] <= 1'b1;
+		 end
+		 if(display_signal[2])
+		 begin
+			  arrow2_heights[479] <= 1'b1;
+	    end
+		 if(display_signal[3])
+		 begin
+			  arrow3_heights[479] <= 1'b1;
 		 end
 	 end
 end
-/*
-always_comb
-begin
-    arrow_1_pos_x_in = arrow_1_pos_x;
-    arrow_1_pos_y_in = arrow_1_pos_y + arrow_1_motion_y;
-    arrow_1_pos_y_in = arrow_1_pos_y_in;
-    arrow_1_pos_x_in = arrow_1_pos_x_in;
-	 
-	 arrow_1_motion_y_in = arrow_speed;
-	 
-//	 arrow
-end
-*/
-/*
-always_comb begin // receptors
-	is_receptor[3:0] = 4'b0;
-	if ( DrawY >= 10'd30 && DrawY <= 10'd79 )
-	begin
-		if ( DrawX >= 10'd256 && DrawX <= 10'd287 )
-			if ( keycode == 8'h34 )
-				is_receptor[0] = 1'b1;
-		if ( DrawX >= 10'd288 && DrawX <= 10'd319 )
-			if ( keycode == 8'h33 )
-				is_receptor[1] = 1'b1;
-		if ( DrawX >= 10'd320 && DrawX <= 10'd351 )
-			if ( keycode == 8'h35 )
-				is_receptor[2] = 1'b1;
-		if ( DrawX >= 10'd352 && DrawX <= 10'd383 )
-			if ( keycode == 8'h3b )
-				is_receptor[3] = 1'b1;
-	end
-end
-*/
 
 always_comb
 begin
     display_arrow = 1'b0;
-//    if ( DistY <= 32 && DistY >= -32 && DistX <= 32 && DistX >= -32)
-/*
-		if (DrawX >= 10'd256 && DrawX <= 10'd383 && DrawY >= 10'd447 && DrawY <= 10'd479)
-        display_arrow[0] = 1'b1;    
-		if (DistX <= Size && DistX >= (-1*Size) && DistY <= Size && DistY >= (-1*Size))
-		  display_arrow[1] = 1'b1;
-*/
 	   for(int n=0; n<480;n++)
 		begin
 		  if (arrow0_heights[n] == 1'b1)
 			 if (DrawX >= 10'd256 && DrawX < 10'd288 && DrawY <= (n+16) && DrawY >= (n-16))
-				display_arrow[2] = 1'b1;
+				display_arrow[0] = 1'b1;
 		  if (arrow1_heights[n] == 1'b1)
 			 if (DrawX >= 10'd288 && DrawX < 10'd320 && DrawY <= (n+16) && DrawY >= (n-16))
-				display_arrow[2] = 1'b1;
+				display_arrow[1] = 1'b1;
 		  if (arrow2_heights[n] == 1'b1)
 			 if (DrawX >= 10'd320 && DrawX < 10'd352 && DrawY <= (n+16) && DrawY >= (n-16))
 				display_arrow[2] = 1'b1;
 		  if (arrow3_heights[n] == 1'b1)
 			 if (DrawX >= 10'd352 && DrawX < 10'd384 && DrawY <= (n+16) && DrawY >= (n-16))
-				display_arrow[2] = 1'b1;		
+				display_arrow[3] = 1'b1;		
 		end
-		/*
-		if (DrawX >= 10'd256 && DrawX <= 10'd383 && DrawY <= 10'd256 && DrawY >= 10'd226)//DrawY <= (n+16) && DrawY >= (n-16))
-				display_arrow[2] = 1'b1;
-		*/
 end
 
 endmodule

@@ -123,7 +123,7 @@ module  ball ( input         Clk, Reset,
    
         // Compute whether the pixel corresponds to ball or background
         if ( ( DistX*DistX + DistY*DistY) <= (Size * Size) ) 
-            is_ball = 1'b1;
+            is_ball = 1'b0;
         else
             is_ball = 1'b0;
     end
