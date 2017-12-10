@@ -29,6 +29,19 @@ module  color_mapper (
         begin
             Red = 8'h55; Green = 8'h00; Blue = 8'h00;
         end
+		  else if ( display_arrow[1])
+		  begin
+		      Red = 8'h00; Green = 8'h55; Blue = 8'h00; 
+		  end
+		  else if ( display_arrow[2])
+		  begin
+		      Red = 8'h00; Green = 8'h00; Blue = 8'h55; 
+		  end
+		  else if ( display_arrow[3])
+		  begin
+		      Red = 8'h40; Green = 8'h40; Blue = 8'h40; 
+		  end
+
 
         // draw depressed receptor
         else if (is_receptor[0] == 1'b1)

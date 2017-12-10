@@ -23,6 +23,7 @@ module toplevel (
 
 logic start, cont; // continue
 assign start = ~KEY[2];
+assign cont = ~KEY[3];
 
 // audio logics
 logic [15:0] audio_data;
@@ -189,6 +190,7 @@ arrow arrow_inst(
 	.Clk          (Clk),
 	.reset        (reset),
 	.frame_clk    (VGA_VS),
+	.cont			  (cont),
 	.display_arrow(display_arrow),
 	.DrawX (DrawX), .DrawY (DrawY)
 );

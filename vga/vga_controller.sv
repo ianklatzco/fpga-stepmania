@@ -9,7 +9,7 @@ module  vga_controller (input              Clk,         // 50 MHz clock
                                                         // but the video DAC on the DE2 board requires an input for it.
                         output logic [9:0] DrawX,       // horizontal coordinate
                                            DrawY        // vertical coordinate
-                      );     
+                        );     
     
     // 800 pixels per line (including front/back porch
     // 525 lines per frame (including front/back porch)

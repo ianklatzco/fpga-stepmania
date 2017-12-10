@@ -5,7 +5,7 @@ module  ball ( input         Clk, Reset,
                input [7:0]   keycode,
                output logic  is_ball             // Whether current pixel belongs to ball or background
               );
-    
+    //arrow positions are at 272, 304, 336, 368
     parameter [9:0] Ball_X_Center=320;  // Center position on the X axis
     parameter [9:0] Ball_Y_Center=240;  // Center position on the Y axis
     parameter [9:0] Ball_X_Min=0;       // Leftmost point on the X axis
@@ -69,7 +69,8 @@ module  ball ( input         Clk, Reset,
         // 51 down
         // 52 up
         // 4f rigth
-        //pressing two keys will make the ball go 
+        //pressing two keys will make the ball go
+        /* 
         if ( keycode == 8'h04 ) // left
         begin
             Ball_Y_Motion_in = 10'b0;
@@ -90,7 +91,7 @@ module  ball ( input         Clk, Reset,
             Ball_Y_Motion_in = 10'b0;
             Ball_X_Motion_in = Ball_X_Step;
         end
-
+        */
 
         // boundaries
         if( Ball_X_Pos + Ball_Size >= Ball_X_Max )  // Ball is at the bottom edge, BOUNCE!
@@ -109,7 +110,7 @@ module  ball ( input         Clk, Reset,
         // e.g. Ball_Y_Pos - Ball_Size <= Ball_Y_Min 
         // If Ball_Y_Pos is 0, then Ball_Y_Pos - Ball_Size will not be -4, but rather a large positive number.
         // y boundary conditions
-        if( Ball_Y_Pos + Ball_Size >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
+        if( Ball_Y_Pos - Ball_Size >= Ball_Y_Max )  // Ball is at the bottom edge, BOUNCE!
         begin
             Ball_X_Motion_in = 10'b0;
             Ball_Y_Motion_in = (~(Ball_Y_Step) + 1'b1);  // 2's complement.  
